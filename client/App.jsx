@@ -8,6 +8,7 @@ import './styles/styles.css';
 import Header from './components/header';
 import Footer from './components/footer';
 import MainContent from './components/maincontent/index';
+import Distribution from './components/distribution/index';
 
 
 
@@ -20,7 +21,9 @@ export default class App extends Component {
             <Route path="/">
               <Container>
                 <Header />
-             <MainContent />
+                <MainContent >
+                <Route path="/" component ={Distribution} />
+             </MainContent >
              <Footer /> 
               </Container>
             </Route>

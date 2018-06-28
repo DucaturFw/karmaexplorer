@@ -45,7 +45,7 @@ const Inner = styled.div`
 
 
 
-const Karma = styled.div`float:left;`;
+const Karma = styled.div``;
 const Distribution= styled.div``;
 const Exchange = styled.div` margin-left: 35px;`;
 const Contacts = styled.div` margin-left: 35px;`;
