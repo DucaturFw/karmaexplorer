@@ -1,10 +1,10 @@
 import React from "react";
 import styled from 'styled-components';
 import {PieChart, Pie,  Tooltip} from 'recharts';
-import eth from '../../image/eth.png';
-import eos from '../../image/eos.png';
-import neo from '../../image/neo.png';
-import ada from '../../image/ada.png';
+import eth from './eth.png';
+import eos from './eos.png';
+import neo from './neo.png';
+import ada from './ada.png';
 import { Button } from 'semantic-ui-react'
 
  export default class Distribution extends React.Component {

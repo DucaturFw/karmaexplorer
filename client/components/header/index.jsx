@@ -1,29 +1,29 @@
 import React from "react";
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import ducatur from '../../image/logo.png';
-import Container from './../elements/container';
+import ducatur from './logo.png';
 
- export default class Header extends React.Component {
+export default class Header extends React.Component {
     render() {
         return (
             <Wrap>
-                <Container>
-                 <Logo>
-                     <img  src={ducatur}/>
+
+                <Logo>
+                    <img src={ducatur} />
                 </Logo>
-                    <Inner>
-                        <Distribution>
-                            Tokens distribution
+                <Inner>
+
+                    <Distribution>
+                        Tokens distribution
                         </Distribution>
-                        <Exchange>
-                            Exchange
+                    <Exchange>
+                        Exchange
                         </Exchange>
-                        <Contacts>
-                            Contacts
+                    <Contacts>
+                        Contacts
                         </Contacts>
-                    </Inner>
-                </Container>
+                </Inner>
+
             </Wrap>
         )
     }
@@ -50,6 +50,6 @@ const Inner = styled.div`
 const Logo = styled.div` 
 
 `;
-const Distribution= styled.div``;
+const Distribution = styled.div``;
 const Exchange = styled.div` margin-left: 35px;`;
 const Contacts = styled.div` margin-left: 35px;`;
