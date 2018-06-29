@@ -5,6 +5,7 @@ import styled, { ThemeProvider } from 'styled-components';
  import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import theme from './styles/theme';
 import './styles/styles.css';
+import Container from './components/container/index'
 import Header from './components/header';
 import Footer from './components/footer';
 import MainContent from './components/maincontent/index';
@@ -41,8 +42,4 @@ export default class App extends Component {
   }
 }
 
-const Container = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-`;
+

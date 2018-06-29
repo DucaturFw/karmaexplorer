@@ -1,6 +1,8 @@
 import React from "react";
 import styled from 'styled-components';
-import { Input } from 'semantic-ui-react'
+import QRCode from 'qrcode.react';
+import eth from './eth.png';
+import eos from './eos.png';
 
 
 
@@ -12,9 +14,30 @@ export default class Pending extends React.Component {
             <Wrap>
 
                 <Title>
-                    <h3>ORDER ID: 123456789</h3>
+                    <h2>ORDER ID: 123456789</h2>
                 </Title>
+                 <Payment>
+                     <Qr>
+                <QRCode value="http://facebook.github.io/react/" />
+                 </Qr>
+                 <PaymentDetails>
+                     <PaymentField>
+                         <TitleField>Send this amount:</TitleField>
+                         <PaymentCountField>
+                             <p>50</p>
+                             <img src={eos}/>
+                             <p>EOS</p>
+                         </PaymentCountField>
+                     </PaymentField>
+                     <PaymentField>
+                     <TitleField>To this address:</TitleField>
+                     <p>0xe4120edcd457d7E4b9a31B0aaA91147c403dAEDa</p>
+                     </PaymentField>
+                     <PaymentField>
+                     </PaymentField>
+                 </PaymentDetails>
                 
+                </Payment>
             </Wrap>
         )
     }
@@ -25,7 +48,7 @@ export default class Pending extends React.Component {
 const Wrap = styled.div`
     background-color: #FFFFFF;
     width:45rem;
-    height:40rem;
+    height:30rem;
     display: flex-inline;
     border-radius: 10px;
     flex-wrap:wrap;
@@ -42,10 +65,34 @@ margin-bottom:40px;
 
 `;
 
-const Tokens = styled.div`
+const PaymentCountField = styled.div`
+display:flex;
+flex-direction:row;
+justify-content: flex-start;
+`;
+
+const TitleField =styled.span`
+font-weight: 500;
+color: rgba(40, 47, 54, 0.8);
+`
+const Payment = styled.div`
 display: flex;
 flex-direction:row;
 justify-content: space-around;
+
+`;
+const Qr = styled.div`
+display: flex;
+flex-direction:row;
+justify-content: space-around;
+
+`;
+const PaymentDetails = styled.div`
+display: flex;
+flex-direction:column;
+justify-content: space-around;
+`;
+const PaymentField = styled.div`
 
 `;
 const Item = styled.div`
@@ -56,7 +103,4 @@ align-items: center;
 height:15em;
 width:10em;
 `;
-const Nametoken = styled.h4`
-
-`
 

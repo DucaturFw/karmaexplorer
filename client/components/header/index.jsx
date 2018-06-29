@@ -32,7 +32,6 @@ export default class Header extends React.Component {
 
 
 const Wrap = styled.div`
-    background-color: #0D1539;
     color: white;
     font-size: 16px;
     height: 100px;

@@ -1,16 +1,16 @@
 import React from "react";
 
 import styled from 'styled-components';
-import Container from './../elements/container';
+//import Container from './../elements/container';
 
- export default class Footer extends React.Component {
+export default class Footer extends React.Component {
     render() {
         return (
             <Wrap>
-                <Container>
-                <Karma> Karma Exhange </Karma>
+                
+                    <Karma> Karma Exhange </Karma>
                     <Inner>
-                 
+
                         <Distribution>
                             Tokens distribution
                         </Distribution>
@@ -21,7 +21,7 @@ import Container from './../elements/container';
                             Contacts
                         </Contacts>
                     </Inner>
-                </Container>
+               
             </Wrap>
         )
     }
@@ -30,7 +30,6 @@ import Container from './../elements/container';
 
 
 const Wrap = styled.div`
-    background-color: #0D1539;
     color: white;
     font-size: 16px;
     height: 100px;
@@ -48,7 +47,7 @@ const Inner = styled.div`
 const Karma = styled.div`
 margin-left:5rem;
 `;
-const Distribution= styled.div``;
+const Distribution = styled.div``;
 const Exchange = styled.div` margin-left: 35px;`;
 const Contacts = styled.div` margin-left: 35px;`;
 
