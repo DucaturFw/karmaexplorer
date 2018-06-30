@@ -1,6 +1,8 @@
 import React from "react";
 import styled from 'styled-components';
 import { PieChart, Pie, Tooltip, Cell } from 'recharts';
+import FA from 'react-fontawesome';
+
 import eth from './eth.png';
 import eos from './eos.png';
 import neo from './neo.png';
@@ -8,14 +10,41 @@ import ada from './ada.png';
 import bitcoin from './bitcoin.png';
 
 const data = [
-    { name: 'EOS', value: 2400, src: eos },
-    { name: 'ETH', value: 4567, src: eth },
-    { name: 'NEO', value: 1398, src: neo },
-    { name: 'ADA', value: 9800, src: ada }
+    {
+        name: 'EOS',
+        stake: 0.30,
+        tokens: 4348934832,
+    },
+    {
+        name: 'ETH',
+        stake: 0.20,
+        tokens: 4348934832
+    },
+    {
+        name: 'NEO',
+        stake: 0.1,
+        tokens: 4348934832,
+    },
+    {
+        name: 'ADA',
+        stake: 0.4,
+        tokens: 4348934832
+    },
 ];
 const COLORS = ["#8C8C8C", "#44C5FF", "#B8E82C", "#4561FF"];
 
 export default class Distribution extends React.Component {
+
+    state = {
+        loading: true,
+    }
+
+    componentDidMount() {
+        Promise.resolve(data)
+            .then(blockchains => {
+                this.setState({ blockchains, loading: false });
+            })
+    }
 
     get labels() {
         return data.map((item, idx) => {
@@ -25,13 +54,23 @@ export default class Distribution extends React.Component {
                     <br />
                     <Label color={COLORS[idx]} />
                     <span>{item.name}</span>
-                    <p>{item.value}</p>
+                    <p>{item.tokens}</p>
                 </Item>
             )
         })
     }
 
     render() {
+        if (this.state.loading) {
+            return (
+                <Wrap>
+                    <LoadingWrap>
+                        <FA name="spinner" size="4x" spin />
+                    </LoadingWrap>
+                </Wrap>
+            )
+        }
+
         return (
             <Wrap>
                 <Title>
@@ -47,7 +86,7 @@ export default class Distribution extends React.Component {
                     <PieChart width={250} height={250}>
                         <Pie
                             data={data}
-                            dataKey={"value"}
+                            dataKey={"stake"}
                             innerRadius={80}
                             labelLine={false}
                             outerRadius={120} fill="#82ca9d">
@@ -74,7 +113,7 @@ export default class Distribution extends React.Component {
 }
 const Wrap = styled.div`
     background-color: #FFFFFF;
-    width:50rem;;
+    width:50rem;
     border-radius: 10px;
 `;
 
@@ -133,4 +172,12 @@ const Exchangebutton = styled.button`
 const Exchange = styled.div`
     text-align: center;
     padding: 20px;
+`;
+
+const LoadingWrap = styled.div`
+    height: 400px;
+    text-align: center;
+    padding-top: 200px;
+    /* display: flex;
+    justify-content: center; */
 `;
