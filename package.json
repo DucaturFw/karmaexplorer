@@ -1,7 +1,7 @@
 {
-  "name": "l2dex",
+  "name": "ductoken",
   "version": "0.0.1",
-  "description": "Frontend to L2dex.",
+  "description": "Ducatur Multitoken",
   "main": "index.js",
   "scripts": {
     "start": "node bin/index.js",
