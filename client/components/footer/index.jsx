@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 //import Container from './../elements/container';
 
@@ -7,47 +7,62 @@ export default class Footer extends React.Component {
     render() {
         return (
             <Wrap>
-                
-                    <Karma> Karma Exhange </Karma>
-                    <Inner>
-
-                        <Distribution>
+                <Cont>
+                    <Left> Karma Exhange </Left>
+                </Cont>
+                <Cont>
+                    <StyledLink
+                        to={'/'}
+                    >
+                        <Right>
                             Tokens distribution
-                        </Distribution>
-                        <Exchange>
+                        </Right>
+                    </StyledLink>
+                    <StyledLink to={'/'}>
+                        <Right>
                             Exchange
-                        </Exchange>
-                        <Contacts>
+                        </Right>
+                    </StyledLink>
+                    <StyledLink to={'/'}>
+                        <Right>
                             Contacts
-                        </Contacts>
-                    </Inner>
-               
-            </Wrap>
+                        </Right>
+                    </StyledLink>
+                </Cont>
+            </Wrap >
         )
     }
 }
-
-
 
 const Wrap = styled.div`
     color: white;
     font-size: 16px;
     height: 100px;
-`;
-
-const Inner = styled.div`
     display: flex;
-    flex-direction:row;
-    justify-content: flex-end;
-    align-items: center;   
+    justify-content: space-between;
 `;
 
-
-
-const Karma = styled.div`
-margin-left:5rem;
+const Cont = styled.div`
+    display: flex;
+    margin: 50px;
 `;
-const Distribution = styled.div``;
-const Exchange = styled.div` margin-left: 35px;`;
-const Contacts = styled.div` margin-left: 35px;`;
 
+const Item = styled.div``;
+
+const Left = styled(Item)`
+    color: #6987B9;
+`;
+
+const Right = styled(Item)`
+    margin: 0 30px;
+`;
+
+const StyledLink = styled(Link)`
+    color: #6987B9;
+    margin: 0 20px;
+
+    &:hover, &:active {
+        color: #8BE7FF;
+        text-decoration: none;
+    }
+`;

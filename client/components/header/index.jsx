@@ -52,7 +52,7 @@ const Inner = styled.div`
 `;
 
 const Logo = styled.div` 
-    padding: 20px 30px;
+    padding: 20px 50px;
     flex: 0 0 250px;
 `;
 const Menu = styled.div`
