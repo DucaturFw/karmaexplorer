@@ -1,15 +1,16 @@
 
 import React from "react";
 import styled from 'styled-components';
-import {PieChart, Pie,  Tooltip} from 'recharts';
-//import eos from './eos.png';
+import {PieChart, Pie,  Tooltip,Cell} from 'recharts';
+import eos from './eos.png';
 
 
  export default class Network extends React.Component {
     render() {
-        const data02 = [{name: 'EOS', value: 2400,color:'#FFFFFF'}, {name: 'ETH', value: 4567},
-                  {name: 'NEO', value: 1398}, {name: 'ADA', value: 9800}];
-                  
+        const data = [{name: 'addres1', value: 2400}, {name: 'addres2', value: 4567},
+                  {name: 'addres3', value: 1398}, {name: 'addres4', value: 9800},
+                   {name: 'addres5', value: 9800}];
+                   const COLORS = ["#8C8C8C","44C5FF","#B8E82C","#8C8C8C","#8C8C8C"];
         return (
             <Wrap>
 
@@ -19,8 +20,22 @@ import {PieChart, Pie,  Tooltip} from 'recharts';
               <Holders>
             <Charter>
               <PieChart width={350} height={170}>
-              <Pie data={data02} innerRadius={50} outerRadius={80} fill="#82ca9d"/>
+              <Pie data={data} innerRadius={50} outerRadius={80} fill="#82ca9d"
+              label={
+               <g>
+                 <image xlinkHref={eos} x={145} y={55} height="31px" width="10px" textAnchor="middle" fill="#666" />
+                <text x={170} y={70} dy={8} textAnchor="middle" fill="#282F36" fontSize="12">15746</text>
+                <text x={170} y={80} dy={8} textAnchor="middle" fill="#282F36" fontSize="12">EOS TOTAL</text>
+             
+            </g>
+              }
+              labelLine={false}
+              >
+               {
+          	data.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/>)
+          }
               <Tooltip /> 
+              </Pie>
               </PieChart>
          </Charter>
          <HoldersTable>

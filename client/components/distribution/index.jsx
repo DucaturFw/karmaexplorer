@@ -1,16 +1,18 @@
 import React from "react";
 import styled from 'styled-components';
-import {PieChart, Pie,  Tooltip} from 'recharts';
+import {PieChart, Pie,  Tooltip, Cell} from 'recharts';
 import eth from './eth.png';
 import eos from './eos.png';
 import neo from './neo.png';
 import ada from './ada.png';
-import { Button } from 'semantic-ui-react'
+import bitcoin from './bitcoin.png';
+
 
  export default class Distribution extends React.Component {
     render() {
-        const data02 = [{name: 'EOS', value: 2400,color:'#FFFFFF'}, {name: 'ETH', value: 4567},
+        const data = [{name: 'EOS', value: 2400,color:'#FFFFFF'}, {name: 'ETH', value: 4567},
                   {name: 'NEO', value: 1398}, {name: 'ADA', value: 9800}];
+                  const COLORS = ["#8C8C8C","44C5FF","#B8E82C","#4561FF"];
                   
         return (
             <Wrap>
@@ -20,7 +22,21 @@ import { Button } from 'semantic-ui-react'
               </Title>
             <Charter>
               <PieChart width={350} height={170}>
-              <Pie data={data02} innerRadius={50} outerRadius={80} fill="#82ca9d"/>
+              <Pie data={data} innerRadius={50}
+              label={
+            <g>
+                 <image xlinkHref={bitcoin} x={145} y={55} height="31px" width="10px" textAnchor="middle" fill="#666" />
+                <text x={170} y={70} dy={8} textAnchor="middle" fill="#282F36" fontSize="12">256.8</text>
+                <text x={170} y={80} dy={8} textAnchor="middle" fill="#282F36" fontSize="12">BTC TOTAL</text>
+             
+            </g>
+              }
+              labelLine={false}
+              outerRadius={80} fill="#82ca9d">
+              {
+          	data.map((entry, index) => <Cell fill={COLORS[index % COLORS.length]}/>)
+          }
+          </Pie >
               <Tooltip /> 
               </PieChart>
          </Charter>
