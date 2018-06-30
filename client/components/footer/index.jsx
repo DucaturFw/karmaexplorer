@@ -47,13 +47,11 @@ const Cont = styled.div`
     margin: 50px;
 `;
 
-const Item = styled.div``;
-
-const Left = styled(Item)`
+const Left = styled.div`
     color: #6987B9;
 `;
 
-const Right = styled(Item)`
+const Right = styled.div`
     margin: 0 30px;
 `;
 
