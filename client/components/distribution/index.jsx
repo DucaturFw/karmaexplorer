@@ -50,6 +50,13 @@ export default class Distribution extends React.Component {
             })
     }
 
+    onClick = (e) => {
+        const location = {
+            pathname: `/holders/${e.name.toLowerCase()}`
+        };
+        this.props.history.push(location);
+    }
+
     get labels() {
         return data.map((item, idx) => {
             return (
@@ -97,7 +104,9 @@ export default class Distribution extends React.Component {
                             {
                                 data.map((entry, index) => <Cell
                                     key={index}
-                                    fill={COLORS[index % COLORS.length]} />)
+                                    fill={COLORS[index % COLORS.length]}
+                                    onClick={this.onClick.bind(this, entry)}
+                                />)
                             }
                         </Pie >
                         <Tooltip />
