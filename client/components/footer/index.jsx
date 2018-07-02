@@ -36,7 +36,7 @@ const Wrap = styled.div`
     font-size: 16px;
     height: 100px;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
 `;
 
 const Cont = styled.div`
