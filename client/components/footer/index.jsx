@@ -8,9 +8,6 @@ export default class Footer extends React.Component {
         return (
             <Wrap>
                 <Cont>
-                    <Left> Karma Exhange </Left>
-                </Cont>
-                <Cont>
                     <StyledLink
                         to={'/'}
                     >
@@ -45,10 +42,6 @@ const Wrap = styled.div`
 const Cont = styled.div`
     display: flex;
     margin: 50px;
-`;
-
-const Left = styled.div`
-    color: #6987B9;
 `;
 
 const Right = styled.div`
