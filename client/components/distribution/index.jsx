@@ -14,21 +14,25 @@ const data = [
         name: 'EOS',
         stake: 0.30,
         tokens: 4348934832,
+        src: eos,
     },
     {
         name: 'ETH',
         stake: 0.20,
-        tokens: 4348934832
+        tokens: 4348934832,
+        src: eth,
     },
     {
         name: 'NEO',
         stake: 0.1,
         tokens: 4348934832,
+        src: neo,
     },
     {
         name: 'ADA',
         stake: 0.4,
-        tokens: 4348934832
+        tokens: 4348934832,
+        src: ada,
     },
 ];
 const COLORS = ["#8C8C8C", "#44C5FF", "#B8E82C", "#4561FF"];
