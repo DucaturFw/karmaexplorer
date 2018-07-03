@@ -1,6 +1,8 @@
 import React from "react";
 import styled from 'styled-components';
 import { Input } from 'semantic-ui-react'
+import Eos from 'eosjs';
+
 import eth from './eth.png';
 import eos from './eos.png';
 import row from './row.png';
@@ -23,8 +25,69 @@ export default class Rate extends React.Component {
     }
 
     handleMake = e => {
-        console.log('Make TX', this.props);
-        console.log('state', this.state);
+        if (this.props.from === 'eos') {
+            this.makeEOS();
+        }
+    }
+
+    makeEOS() {
+        let identity;
+        const networkEOS = {
+            blockchain: 'eos',
+            host: eosAddress,
+            port: 8888,
+            chainId: '038f4b0fc8ff18a4f0842a8f0564611f6e96e8535901dd45e43ac8691a1c4dca',
+        }
+        console.log(eosAddress)
+
+        console.log('start transactions EOS');
+
+        scatter.suggestNetwork(networkEOS)
+            .then(x => {
+                return scatter.getIdentity(/*{ accounts: [networkEOS] }*/)
+            })
+            .then(data => {
+                identity = data;
+                console.log(identity);
+
+                return scatter.authenticate();
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            .then(sig => {
+                // This will return your `location.host` 
+                // signed with their Identity's private key.
+                // It has already been validated, but you can validate it yourself as well using eosjs-ecc.
+
+                window.eos = scatter.eos(networkEOS, Eos, { chainId: networkEOS.chainId, httpEndpoint: `http://${eosAddress}:${networkEOS.port}` }, 'http');
+                return window.eos.getAccount({ account_name: identity.name });
+                // ecc.verify(sig, location.host, scatter.identity.publicKey);
+            })
+            .then(account => {
+                console.log('acc', account);
+
+
+                // window.eos.transactions({
+                //     actions: {
+                //         "account": "eosio",
+                //         "name": "updateauth",
+                //         "authorization": [{
+                //             "actor": "ducatur",
+                //             "permission": "active"
+                //         }],
+                //         "data": require_permissions({
+                //             account: ident.name,
+                //             key: ident.publicKey,
+                //             actor: "duccntr",
+                //             parent: "owner",
+                //             // account, key, actor, parent, permission
+                //         })
+                //     }
+                // })
+            })
+            .catch(err => console.log('auth err', err))
+
     }
 
     render() {
@@ -62,7 +125,37 @@ export default class Rate extends React.Component {
     }
 }
 
-
+const require_permissions = ({ account, key, actor, parent }) => {
+    return `{
+        "account": "${account}",
+        "permission": "active",
+        "parent": "${parent}",
+        "auth": {
+            "threshold": 0,
+            "keys": [
+                {
+                    "key": "${key}",
+                    "weight": 0
+                }
+            ],
+            "accounts": [
+                {
+                    "permission": {
+                        "actor": "${actor}",
+                        "permission": "eosio.code"
+                    },
+                    "weight": 0
+                }
+            ],
+            "waits": [
+                {
+                    "wait_sec": 0,
+                    "weight": 0
+                }
+            ]
+        }
+    }`
+}
 
 const Wrap = styled.div`
     background-color: #FFFFFF;
