@@ -1,21 +1,26 @@
 import React from "react";
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 //import Container from './../elements/container';
 
-export default class Footer extends React.Component {
+class Footer extends React.Component {
     render() {
+        const { pathname } = this.props.location;
+        const isTokens = pathname === '/' || pathname.substr(0, 9) === '/holders/' ? 1 : 0;
+        const isExchage = pathname === '/exchange' ? 1 : 0;
+
         return (
             <Wrap>
                 <Cont>
                     <StyledLink
                         to={'/'}
+                        active={isTokens}
                     >
                         <Right>
                             Tokens distribution
                         </Right>
                     </StyledLink>
-                    <StyledLink to={'/'}>
+                    <StyledLink to={'/exchange'} active={isExchage}>
                         <Right>
                             Exchange
                         </Right>
@@ -30,6 +35,7 @@ export default class Footer extends React.Component {
         )
     }
 }
+export default withRouter(Footer);
 
 const Wrap = styled.div`
     color: white;
@@ -49,7 +55,7 @@ const Right = styled.div`
 `;
 
 const StyledLink = styled(Link)`
-    color: #6987B9;
+    color: ${props => props.active ? '#8BE7FF' : '#6987B9'};
     margin: 0 20px;
 
     &:hover, &:active {

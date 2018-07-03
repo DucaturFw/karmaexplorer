@@ -122,9 +122,13 @@ export default class Distribution extends React.Component {
                     {this.labels}
                 </Tokens>
                 <Exchange >
-                    <Exchangebutton>
-                        Exchange
-                    </Exchangebutton>
+                    <StyledLink
+                        to={`/exchange`}
+                    >
+                        <Exchangebutton>
+                            Exchange
+                        </Exchangebutton>
+                    </StyledLink>
                 </Exchange >
             </Wrap>
         )
@@ -194,6 +198,7 @@ const Exchangebutton = styled.button`
     width:130px;
     color: #FFFFFF;
     cursor: pointer;
+    outline: none;
 `;
 
 const Exchange = styled.div`

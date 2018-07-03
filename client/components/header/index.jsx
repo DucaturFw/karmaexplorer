@@ -1,10 +1,14 @@
 import React from "react";
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import ducatur from './logo.png';
 
-export default class Header extends React.Component {
+class Header extends React.Component {
     render() {
+        const { pathname } = this.props.location;
+        const isTokens = pathname === '/' || pathname.substr(0, 9) === '/holders/' ? 1 : 0;
+        const isExchage = pathname === '/exchange' ? 1 : 0;
+
         return (
             <Wrap>
                 <Logo>
@@ -13,11 +17,13 @@ export default class Header extends React.Component {
                 <Inner>
                     <StyledLink
                         to={'/'}
+                        active={isTokens}
                     >
                         Tokens distribution
                     </StyledLink>
                     <StyledLink
-                        to={'/'}
+                        to={'/exchange'}
+                        active={isExchage}
                     >
                         Exchange
                     </StyledLink>
@@ -33,8 +39,7 @@ export default class Header extends React.Component {
         )
     }
 }
-
-
+export default withRouter(Header);
 
 const Wrap = styled.div`
     color: white;
@@ -59,7 +64,7 @@ const Menu = styled.div`
     flex: 0 0 250px;
 `;
 const StyledLink = styled(Link)`
-    color: #6987B9;
+    color: ${props => props.active ? '#8BE7FF' : '#6987B9'};
     margin: 0 20px;
 
     &:hover, &:active {
