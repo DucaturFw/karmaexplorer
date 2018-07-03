@@ -1,7 +1,8 @@
 import React from "react";
 import styled from 'styled-components';
-import { PieChart, Pie, Tooltip, Cell } from 'recharts';
 import FA from 'react-fontawesome';
+import { Link } from 'react-router-dom';
+import { PieChart, Pie, Tooltip, Cell } from 'recharts';
 
 import eth from './eth.png';
 import eos from './eos.png';
@@ -60,13 +61,18 @@ export default class Distribution extends React.Component {
     get labels() {
         return data.map((item, idx) => {
             return (
-                <Item key={idx}>
-                    <img src={item.src} />
-                    <br />
-                    <Label color={COLORS[idx]} />
-                    <span>{item.name}</span>
-                    <p>{item.tokens}</p>
-                </Item>
+                <StyledLink
+                    to={`/holders/${item.name.toLowerCase()}`}
+                    key={idx}
+                >
+                    <Item>
+                        <img src={item.src} />
+                        <br />
+                        <Label color={COLORS[idx]} />
+                        <span>{item.name}</span>
+                        <p>{item.tokens}</p>
+                    </Item>
+                </StyledLink>
             )
         })
     }
@@ -160,6 +166,14 @@ const Tokens = styled.div`
 
 const Item = styled.div`
     text-align: center;
+`;
+
+const StyledLink = styled(Link)`
+    color: #282F36;
+
+    &:hover {
+        text-decoration: none;
+    }
 `;
 
 const Label = styled.span`
