@@ -15,6 +15,7 @@ import Choose from './components/choose/index';
 import Rate from './components/rate/index';
 import Network from './components/network/index';
 import Pending from './components/pending/index';
+
 export default class App extends Component {
   render() {
     return (

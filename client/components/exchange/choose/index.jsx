@@ -6,34 +6,40 @@ import neo from './neo.png';
 import ada from './ada.png';
 
 export default class Choose extends React.Component {
+
+    get tokens() {
+        const { list, field, onChoose } = this.props;
+
+        return list.map((item, idx) => {
+            return (
+                <Item onClick={onChoose.bind(this, {
+                    field, value: item
+                })}
+                    key={idx}>
+                    <Logo src={this.getImg(item)} />
+                    <Nametoken>{item.toUpperCase()}</Nametoken>
+                </Item>
+            )
+        })
+    }
+
+    getImg(name) {
+        switch (name) {
+            case 'eos':
+                return eos;
+            case 'eth':
+                return eth;
+        }
+    }
+
     render() {
-
-
         return (
             <Wrap>
-
                 <Title>
                     <h3>CHOOSE TOKEN</h3>
                 </Title>
                 <Tokens>
-                    <Item>
-                        <Logo src={eos} />
-                        <Nametoken>EOS </Nametoken>
-
-                    </Item>
-
-                    <Item>
-                        <Logo src={eth} />
-                        <Nametoken>ETH </Nametoken>
-                    </Item>
-                    <Item>
-                        <Logo src={neo} />
-                        <Nametoken>NEO </Nametoken>
-                    </Item>
-                    <Item>
-                        <Logo src={ada} />
-                        <Nametoken>ADA </Nametoken>
-                    </Item>
+                    {this.tokens}
                 </Tokens>
             </Wrap>
         )
@@ -46,20 +52,13 @@ const Wrap = styled.div`
     background-color: #FFFFFF;
     width:50rem;
     height:25rem;
-    display: flex-inline;
     border-radius: 10px;
-    flex-wrap:wrap;
 `;
 
 const Title = styled.div`
-display:flex;
-align-items: flex-start;
-justify-content: center;
-border-bottom: solid rgba(40, 47, 54, 0.15);
-flex: 1 auto;
-height:10%;
-margin-bottom:40px;
-
+    border-bottom: solid rgba(40, 47, 54, 0.15);
+    margin-bottom:40px;
+    padding: 15px;
 `;
 
 const Tokens = styled.div`
