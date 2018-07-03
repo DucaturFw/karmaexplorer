@@ -33,18 +33,16 @@ export default class Rate extends React.Component {
     makeEOS() {
         let identity;
         const networkEOS = {
+            protocol: 'http',
             blockchain: 'eos',
             host: eosAddress,
             port: 8888,
             chainId: '038f4b0fc8ff18a4f0842a8f0564611f6e96e8535901dd45e43ac8691a1c4dca',
-        }
-        console.log(eosAddress)
-
-        console.log('start transactions EOS');
+        };
 
         scatter.suggestNetwork(networkEOS)
             .then(x => {
-                return scatter.getIdentity(/*{ accounts: [networkEOS] }*/)
+                return scatter.getIdentity({ accounts: [networkEOS] })
             })
             .then(data => {
                 identity = data;
@@ -61,30 +59,36 @@ export default class Rate extends React.Component {
                 // It has already been validated, but you can validate it yourself as well using eosjs-ecc.
 
                 window.eos = scatter.eos(networkEOS, Eos, { chainId: networkEOS.chainId, httpEndpoint: `http://${eosAddress}:${networkEOS.port}` }, 'http');
-                return window.eos.getAccount({ account_name: identity.name });
+                // return window.eos.getAccount({ account_name: identity.name });
+                // return window.eos.getKeyAccounts(identity.publicKey)
                 // ecc.verify(sig, location.host, scatter.identity.publicKey);
+
+                return identity.accounts[0];
             })
             .then(account => {
-                console.log('acc', account);
+                // console.log('acc', account);
 
+                const tx_data = {
+                    actions: {
+                        "account": "eosio",
+                        "name": "updateauth",
+                        "authorization": [{
+                            "actor": account.name,
+                            "permission": "active"
+                        }],
+                        "data": require_permissions({
+                            account: account.name,
+                            key: identity.publicKey,
+                            actor: "duccntr",
+                            parent: "owner",
+                            // account, key, actor, parent, permission
+                        })
+                    }
+                };
 
-                // window.eos.transactions({
-                //     actions: {
-                //         "account": "eosio",
-                //         "name": "updateauth",
-                //         "authorization": [{
-                //             "actor": "ducatur",
-                //             "permission": "active"
-                //         }],
-                //         "data": require_permissions({
-                //             account: ident.name,
-                //             key: ident.publicKey,
-                //             actor: "duccntr",
-                //             parent: "owner",
-                //             // account, key, actor, parent, permission
-                //         })
-                //     }
-                // })
+                console.log(tx_data);
+
+                window.eos.transaction(tx_data);
             })
             .catch(err => console.log('auth err', err))
 
@@ -126,35 +130,35 @@ export default class Rate extends React.Component {
 }
 
 const require_permissions = ({ account, key, actor, parent }) => {
-    return `{
-        "account": "${account}",
+    return {
+        "account": `${account}`,
         "permission": "active",
-        "parent": "${parent}",
+        "parent": `${parent}`,
         "auth": {
-            "threshold": 0,
+            "threshold": 1,
             "keys": [
                 {
-                    "key": "${key}",
-                    "weight": 0
+                    "key": `${key}`,
+                    "weight": 1
                 }
             ],
             "accounts": [
                 {
                     "permission": {
-                        "actor": "${actor}",
+                        "actor": `${actor}`,
                         "permission": "eosio.code"
                     },
-                    "weight": 0
+                    "weight": 1
                 }
             ],
             "waits": [
-                {
-                    "wait_sec": 0,
-                    "weight": 0
-                }
+                // {
+                //     "wait_sec": 0,
+                //     "weight": 0
+                // }
             ]
         }
-    }`
+    }
 }
 
 const Wrap = styled.div`
