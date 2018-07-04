@@ -3,18 +3,20 @@ import Eos from 'eosjs';
 const chainId = '038f4b0fc8ff18a4f0842a8f0564611f6e96e8535901dd45e43ac8691a1c4dca';
 const contractName = 'duccntr';
 
-export const eosExchange = ({quantity, blockchain, to}) => {
-    let identity,
-        currentAccount,
-        rawAccount;
+const networkEOS = {
+    protocol: 'http',
+    blockchain: 'eos',
+    host: eosAddress,
+    port: 8888,
+    chainId,
+};
 
-    const networkEOS = {
-        protocol: 'http',
-        blockchain: 'eos',
-        host: eosAddress,
-        port: 8888,
-        chainId,
-    };
+let identity,
+    currentAccount,
+    rawAccount;
+
+export const eosExchange = ({quantity, blockchain, to}) => {
+    initEos();
 
     return scatter.suggestNetwork(networkEOS)
         .then(x => {
@@ -27,72 +29,54 @@ export const eosExchange = ({quantity, blockchain, to}) => {
             return scatter.authenticate();
         })
         .catch(error => {
-            console.log(error)
+            console.log('identity error >', error)
         })
-        .then(sig => {
-            window.eos = scatter.eos(networkEOS, Eos, {
-                chainId: networkEOS.chainId,
-                httpEndpoint: `http://${eosAddress}:${networkEOS.port}`
-            }, 'http');
-
-            return window.eos.getAccount({ account_name: currentAccount.name })
-        })
-        .then(raw => {
-            rawAccount = raw;
-
-            const permission = raw.permissions.find(perm => {
-                return perm.perm_name === currentAccount.authority;
-            });
-
-            return currentAccount;
-        })
-        .then(account => {
-            console.log('current account >', account);
-
-            const tx_data = {
-                actions: [{
-                    "account": "eosio",
-                    "name": "updateauth",
-                    "authorization": [{
-                        "actor": account.name,
-                        "permission": account.authority
-                    }],
-                    "data": require_permissions({
-                        account: account.name,
-                        key: identity.publicKey,
-                        actor: contractName,
-                        parent: account.authority,
-                    })
-                }]
-            };
-
-            console.log(tx_data);
-            return window.eos.transaction(tx_data);
-        })
-        .then(res => {
-            console.log(res);
-
-            const tx_data = {
-                actions: [{
-                    "account": contractName,
-                    "name": "exchange",
-                    "authorization": [{
-                        "actor": currentAccount.name,
-                        "permission": currentAccount.authority
-                    }],
-                    "data": {
-                        from: currentAccount.name,
-                        quantity,
-                        blockchain,
-                        to
-                    }
-                }]
-            };
-
-            return window.eos.transaction(tx_data);
-        })
+        .then(getEosAccount)
+        .then(checkPermissions)
+        .then(updateAuthTX)
+        .then(exchangeTX.bind(null, {quantity, blockchain, to}))
         .then(console.log)
-        .catch(err => console.log('auth err', err))
+        .catch(err => console.log('tx err >', err))
+}
+
+const initEos = () => {
+    window.eos = scatter.eos(networkEOS, Eos, {
+        chainId: networkEOS.chainId,
+        httpEndpoint: `http://${eosAddress}:${networkEOS.port}`
+    }, 'http');
+}
+
+const getEosAccount = () => window.eos.getAccount({ account_name: currentAccount.name });
+const checkPermissions = raw => {
+    rawAccount = raw;
+
+    const permission = raw.permissions.find(perm => {
+        return perm.perm_name === currentAccount.authority;
+    });
+
+    return currentAccount;
+};
+
+const updateAuthTX = () => {
+    const tx_data = {
+        actions: [{
+            "account": "eosio",
+            "name": "updateauth",
+            "authorization": [{
+                "actor": currentAccount.name,
+                "permission": currentAccount.authority
+            }],
+            "data": require_permissions({
+                account: currentAccount.name,
+                key: identity.publicKey,
+                actor: contractName,
+                parent: currentAccount.authority,
+            })
+        }]
+    };
+
+    console.log('UpdateAuth TX > ', tx_data);
+    return window.eos.transaction(tx_data);
 }
 
 const require_permissions = ({ account, key, actor, parent }) => {
@@ -125,4 +109,26 @@ const require_permissions = ({ account, key, actor, parent }) => {
             ]
         }
     }
+}
+
+const exchangeTX = ({quantity, blockchain, to}) => {
+    
+    const tx_data = {
+        actions: [{
+            "account": contractName,
+            "name": "exchange",
+            "authorization": [{
+                "actor": currentAccount.name,
+                "permission": currentAccount.authority
+            }],
+            "data": {
+                from: currentAccount.name,
+                quantity,
+                blockchain,
+                to
+            }
+        }]
+    };
+
+    return window.eos.transaction(tx_data);
 }
