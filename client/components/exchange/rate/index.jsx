@@ -1,7 +1,9 @@
 import React from "react";
 import styled from 'styled-components';
-import { Input } from 'semantic-ui-react';
 import { eosExchange } from './../../../models/eosWallet';
+import addressValidator from 'wallet-address-validator';
+
+// console.log(addressValidator);
 
 import eth from './eth.png';
 import eos from './eos.png';
@@ -10,8 +12,10 @@ import row from './row.png';
 export default class Rate extends React.Component {
 
     state = {
-        value: 10,
+        value: '1.0000',
         address: '',
+        valueError: false,
+        addressError: true,
     }
 
     handleInput = e => {
@@ -21,12 +25,38 @@ export default class Rate extends React.Component {
         this.setState(state => ({
             ...state,
             [name]: value
-        }));
+        }), this.validate);
     }
 
     handleMake = e => {
-        if (this.props.from === 'eos') {
-            this.makeEOS();
+        if (this.isValid()) {
+            if (this.props.from === 'eos') {
+                this.makeEOS();
+            }
+        }
+    }
+
+    validate() {
+        this.validateNumber();
+        this.validateAddress();
+    }
+
+    validateNumber() {
+        const num = new Number(this.state.value);
+
+        if (!isNaN(num)) {
+            this.setState({ value: num.toFixed(4), valueError: false });
+        } else {
+            this.setState({ valueError: true });
+        }
+    }
+
+    validateAddress() {
+        if (this.props.to === 'eth') {
+            const isValid = addressValidator.validate(this.state.address, 'eth');
+
+            console.log(isValid);
+            this.setState({ addressError: !isValid })
         }
     }
 
@@ -38,7 +68,12 @@ export default class Rate extends React.Component {
         })
     }
 
+    isValid() {
+        return !(this.state.valueError || this.state.addressError);
+    }
+
     render() {
+        console.log(this.isValid());
         return (
             <Wrap>
                 <Title>
@@ -47,23 +82,33 @@ export default class Rate extends React.Component {
                 <Tokens>
                     <Item>
                         <Logo src={eos} />
-                        <InputValue value={this.state.value} name="value" onChange={this.handleInput} />
+                        <InputValue
+                            value={this.state.value}
+                            name="value"
+                            onChange={this.handleInput}
+                            isValid={!this.state.valueError}
+                        />
                     </Item>
                     <Row>
                         <img src={row} />
                     </Row>
                     <Item>
                         <Logo src={eth} />
-                        <p>0.883</p>
                     </Item>
                 </Tokens>
                 <ReceiveAddress>
-                    <TitleReceive>Receive ETH address </TitleReceive>
-                    <InputAddress value={this.state.address} name="address" onChange={this.handleInput} />
+                    <TitleReceive>Receive ETH address</TitleReceive>
+                    <InputAddress
+                        value={this.state.address}
+                        name="address"
+                        onChange={this.handleInput}
+                        isValid={!this.state.addressError}
+                    />
                 </ReceiveAddress>
                 <StartExchange>
                     <Exchangebutton
                         onClick={this.handleMake}
+                        isValid={this.isValid()}
                     >
                         Make Transaction
                     </Exchangebutton >
@@ -123,8 +168,7 @@ const Exchangebutton = styled.button`
     flex-direction:column;
     align-items: center;
     justify-content: center;
-    background: #475FF2;
-    box-shadow: 0px 5px 10px rgba(163, 171, 186, 0.2);
+    background: ${props => props.isValid ? '#475FF2' : '#eee'};
     border-radius: 5px;
     font-size: 18px;
     height:2em;
@@ -136,14 +180,15 @@ const StartExchange = styled.div`
     justify-content: center;
 `;
 const InputValue = styled.input`
-    width:5rem;
-    height:3rem;
+    width: 10rem;
+    height: 3rem;
     mix-blend-mode: normal;
-    opacity: 0.3;
-    border: 2px solid #9B9B9B;
+    /* opacity: 0.5; */
+    border: 2px solid ${props => props.isValid ? '#9B9B9B' : 'red'};
     box-sizing: border-box;
     border-radius: 9px;
     text-align: center;
+    outline: none;
 `;
 const ReceiveAddress = styled.div`
     display:flex;
@@ -163,12 +208,13 @@ const TitleReceive = styled.span`
     margin-bottom:2rem;
 `
 const InputAddress = styled.input`
-    width:25rem;
-    height:3rem;
+    width: 30rem;
+    height: 3rem;
     text-align: center;
     mix-blend-mode: normal;
-    opacity: 0.3;
-    border: 2px solid #9B9B9B;
+    /* opacity: 0.3; */
+    border: 2px solid ${props => props.isValid ? '#9B9B9B' : 'red'};
     box-sizing: border-box;
     border-radius: 9px;
+    outline: none;
 `;
