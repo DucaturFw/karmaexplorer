@@ -1,7 +1,7 @@
 import React from "react";
 import styled from 'styled-components';
-import { Input } from 'semantic-ui-react'
-import Eos from 'eosjs';
+import { Input } from 'semantic-ui-react';
+import { eosExchange } from './../../../models/eosWallet';
 
 import eth from './eth.png';
 import eos from './eos.png';
@@ -31,67 +31,11 @@ export default class Rate extends React.Component {
     }
 
     makeEOS() {
-        let identity;
-        const networkEOS = {
-            protocol: 'http',
-            blockchain: 'eos',
-            host: eosAddress,
-            port: 8888,
-            chainId: '038f4b0fc8ff18a4f0842a8f0564611f6e96e8535901dd45e43ac8691a1c4dca',
-        };
-
-        scatter.suggestNetwork(networkEOS)
-            .then(x => {
-                return scatter.getIdentity({ accounts: [networkEOS] })
-            })
-            .then(data => {
-                identity = data;
-                console.log(identity);
-
-                return scatter.authenticate();
-            })
-            .catch(error => {
-                console.log(error)
-            })
-            .then(sig => {
-                // This will return your `location.host` 
-                // signed with their Identity's private key.
-                // It has already been validated, but you can validate it yourself as well using eosjs-ecc.
-
-                window.eos = scatter.eos(networkEOS, Eos, { chainId: networkEOS.chainId, httpEndpoint: `http://${eosAddress}:${networkEOS.port}` }, 'http');
-                // return window.eos.getAccount({ account_name: identity.name });
-                // return window.eos.getKeyAccounts(identity.publicKey)
-                // ecc.verify(sig, location.host, scatter.identity.publicKey);
-
-                return identity.accounts[0];
-            })
-            .then(account => {
-                // console.log('acc', account);
-
-                const tx_data = {
-                    actions: {
-                        "account": "eosio",
-                        "name": "updateauth",
-                        "authorization": [{
-                            "actor": account.name,
-                            "permission": "active"
-                        }],
-                        "data": require_permissions({
-                            account: account.name,
-                            key: identity.publicKey,
-                            actor: "duccntr",
-                            parent: "owner",
-                            // account, key, actor, parent, permission
-                        })
-                    }
-                };
-
-                console.log(tx_data);
-
-                window.eos.transaction(tx_data);
-            })
-            .catch(err => console.log('auth err', err))
-
+        eosExchange({
+            quantity: "1.0000 DUCAT",
+            blockchain: "eth",
+            to: "0x000000000"
+        })
     }
 
     render() {
@@ -126,38 +70,6 @@ export default class Rate extends React.Component {
                 </StartExchange>
             </Wrap>
         )
-    }
-}
-
-const require_permissions = ({ account, key, actor, parent }) => {
-    return {
-        "account": `${account}`,
-        "permission": "active",
-        "parent": `${parent}`,
-        "auth": {
-            "threshold": 1,
-            "keys": [
-                {
-                    "key": `${key}`,
-                    "weight": 1
-                }
-            ],
-            "accounts": [
-                {
-                    "permission": {
-                        "actor": `${actor}`,
-                        "permission": "eosio.code"
-                    },
-                    "weight": 1
-                }
-            ],
-            "waits": [
-                // {
-                //     "wait_sec": 0,
-                //     "weight": 0
-                // }
-            ]
-        }
     }
 }
 
