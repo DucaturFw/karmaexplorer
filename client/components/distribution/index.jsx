@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import FA from 'react-fontawesome';
 import { Link } from 'react-router-dom';
 import { PieChart, Pie, Tooltip, Cell } from 'recharts';
+import axios from 'axios';
 
 import eth from './eth.png';
 import eos from './eos.png';
@@ -10,44 +11,19 @@ import neo from './neo.png';
 import ada from './ada.png';
 import bitcoin from './bitcoin.png';
 
-const data = [
-    {
-        name: 'EOS',
-        stake: 0.30,
-        tokens: 4348934832,
-        src: eos,
-    },
-    {
-        name: 'ETH',
-        stake: 0.20,
-        tokens: 4348934832,
-        src: eth,
-    },
-    {
-        name: 'NEO',
-        stake: 0.1,
-        tokens: 4348934832,
-        src: neo,
-    },
-    {
-        name: 'ADA',
-        stake: 0.4,
-        tokens: 4348934832,
-        src: ada,
-    },
-];
 const COLORS = ["#8C8C8C", "#44C5FF", "#B8E82C", "#4561FF"];
 
 export default class Distribution extends React.Component {
 
     state = {
         loading: true,
+        blockchains: []
     }
 
     componentDidMount() {
-        Promise.resolve(data)
-            .then(blockchains => {
-                this.setState({ blockchains, loading: false });
+        axios.get(`${apiHolders}/api/v1/holders`)
+            .then(res => {
+                this.setState({ blockchains: res.data, loading: false });
             })
     }
 
@@ -59,7 +35,7 @@ export default class Distribution extends React.Component {
     }
 
     get labels() {
-        return data.map((item, idx) => {
+        return this.state.blockchains.map((item, idx) => {
             return (
                 <StyledLink
                     to={`/holders/${item.name.toLowerCase()}`}
@@ -102,13 +78,13 @@ export default class Distribution extends React.Component {
                     </Info>
                     <PieChart width={250} height={250}>
                         <Pie
-                            data={data}
-                            dataKey={"stake"}
+                            data={this.state.blockchains}
+                            dataKey={"tokens"}
                             innerRadius={80}
                             labelLine={false}
                             outerRadius={120} fill="#82ca9d">
                             {
-                                data.map((entry, index) => <Cell
+                                this.state.blockchains.map((entry, index) => <Cell
                                     key={index}
                                     fill={COLORS[index % COLORS.length]}
                                     onClick={this.onClick.bind(this, entry)}
@@ -210,6 +186,4 @@ const LoadingWrap = styled.div`
     height: 400px;
     text-align: center;
     padding-top: 200px;
-    /* display: flex;
-    justify-content: center; */
 `;
