@@ -72,6 +72,20 @@ export default class Rate extends React.Component {
         return !(this.state.valueError || this.state.addressError);
     }
 
+    getItem(name) {
+        let src;
+        switch (this.props[name]) {
+            case 'eth':
+                src = eth;
+                break;
+            case 'eos':
+                src = eos;
+                break;
+        }
+
+        return <Logo src={src} />
+    }
+
     render() {
         console.log(this.isValid());
         return (
@@ -81,7 +95,7 @@ export default class Rate extends React.Component {
                 </Title>
                 <Tokens>
                     <Item>
-                        <Logo src={eos} />
+                        {this.getItem('from')}
                         <InputValue
                             value={this.state.value}
                             name="value"
@@ -93,7 +107,7 @@ export default class Rate extends React.Component {
                         <img src={row} />
                     </Row>
                     <Item>
-                        <Logo src={eth} />
+                        {this.getItem('to')}
                     </Item>
                 </Tokens>
                 <ReceiveAddress>
