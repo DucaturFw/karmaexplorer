@@ -2,34 +2,7 @@ import React from "react";
 import styled from 'styled-components';
 import { PieChart, Pie, Tooltip, Cell } from 'recharts';
 import FA from 'react-fontawesome';
-
-const data = [
-    {
-        address: '0x223232',
-        tokens: 24204932,
-        stake: 0.20
-    },
-    {
-        address: '0x223232',
-        tokens: 24204932,
-        stake: 0.20
-    },
-    {
-        address: '0x223232',
-        tokens: 24204932,
-        stake: 0.20
-    },
-    {
-        address: '0x223232',
-        tokens: 24204932,
-        stake: 0.20
-    },
-    {
-        address: '0x223232',
-        tokens: 24204932,
-        stake: 0.20
-    },
-];
+import axios from 'axios';
 
 export default class Network extends React.Component {
 
@@ -38,8 +11,11 @@ export default class Network extends React.Component {
     }
 
     componentDidMount() {
-        Promise.resolve(data)
-            .then(holders => {
+        const { network } = this.props.match.params;
+
+        axios.get(`${apiHolders}/api/v1/holders/${network}`)
+            .then(res => {
+                const { holders } = res.data;
                 // Add name to show on piechart
                 holders.forEach(holder => holder.name = holder.address);
 
@@ -50,6 +26,22 @@ export default class Network extends React.Component {
     get network() {
         const network = this.props.match.params.network;
         return network.toUpperCase();
+    }
+
+    get summ() {
+        if (this.state.holders) {
+            const summ = this.state.holders.reduce((sum, item) => {
+                return sum + item.tokens;
+            }, 0);
+
+            return (
+                <Info>
+                    {summ}
+                    <br />
+                    TOTAL
+                </Info>
+            );
+        }
     }
 
     get labels() {
@@ -64,7 +56,7 @@ export default class Network extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((item, idx) => {
+                        {this.state.holders.map((item, idx) => {
                             return (
                                 <tr key={idx}>
                                     <CellItem>{item.address}</CellItem>
@@ -97,15 +89,11 @@ export default class Network extends React.Component {
                 </Title>
                 <Inner>
                     <Charter>
-                        <Info>
-                            72642712
-                        <br />
-                            TOTAL
-                        </Info>
+                        {this.summ}
                         <PieChart width={300} height={300}>
                             <Pie
-                                data={data}
-                                dataKey={"stake"}
+                                data={this.state.holders}
+                                dataKey={"tokens"}
                                 innerRadius={80}
                                 labelLine={false}
                                 outerRadius={120} fill="#82ca9d">
@@ -119,9 +107,10 @@ export default class Network extends React.Component {
         )
     }
 }
+
 const Wrap = styled.div`
     background-color: #FFFFFF;
-    width: 50rem;
+    width: 65rem;
     border-radius: 10px;
 `;
 
@@ -159,6 +148,7 @@ const Table = styled.table`
 
 const Cells = styled.td`
     padding: 6px;
+    font-size: 12px;
 `;
 
 const CellItem = styled(Cells)`

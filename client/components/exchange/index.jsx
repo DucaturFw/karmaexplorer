@@ -25,7 +25,6 @@ export default class Exchange extends React.Component {
     }
 
     onChoose = e => {
-        console.log(e);
         this.setState(state => ({
             ...state,
             [e.field]: e.value,

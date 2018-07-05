@@ -53,6 +53,22 @@ export default class Distribution extends React.Component {
         })
     }
 
+    get summ() {
+        if (this.state.blockchains) {
+            const summ = this.state.blockchains.reduce((sum, item) => {
+                return sum + item.tokens;
+            }, 0);
+
+            return (
+                <Info>
+                    {summ}
+                    <br />
+                    TOTAL
+                </Info>
+            );
+        }
+    }
+
     render() {
         if (this.state.loading) {
             return (
@@ -70,12 +86,7 @@ export default class Distribution extends React.Component {
                     <h3>DISTRIBUTION OF TOKENS</h3>
                 </Title>
                 <Charter>
-                    <Info>
-                        <BTC src={bitcoin} />
-                        256.8
-                        <br />
-                        BTC TOTAL
-                    </Info>
+                    {this.summ}
                     <PieChart width={250} height={250}>
                         <Pie
                             data={this.state.blockchains}
