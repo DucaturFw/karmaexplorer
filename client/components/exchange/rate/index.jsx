@@ -116,8 +116,6 @@ export default class Rate extends React.Component {
     }
 
     render() {
-        console.log(this.state);
-        console.log(this.isValid());
         return (
             <Wrap>
                 <Title>
@@ -141,7 +139,7 @@ export default class Rate extends React.Component {
                     </Item>
                 </Tokens>
                 <ReceiveAddress>
-                    <TitleReceive>Receive ETH address</TitleReceive>
+                    <TitleReceive>Receive Target address</TitleReceive>
                     <InputAddress
                         value={this.state.address}
                         name="address"

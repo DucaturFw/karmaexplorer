@@ -77,6 +77,8 @@ export default {
       contractInstance.methods.blockchainExchange(amount, bc, toHex)
         .send({
           from: userAccount,
+          gasPrice: "0x098bca5a00",
+          gasLimit: "0x57d8"
         })
         .on("receipt", receipt => res(receipt))
         .on("error", error => rej(error));
