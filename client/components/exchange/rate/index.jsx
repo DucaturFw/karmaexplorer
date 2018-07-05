@@ -1,9 +1,8 @@
 import React from "react";
 import styled from 'styled-components';
 import { eosExchange } from './../../../models/eosWallet';
+import ethWallet from './../../../models/ethWallet';
 import addressValidator from 'wallet-address-validator';
-
-// console.log(addressValidator);
 
 import eth from './eth.png';
 import eos from './eos.png';
@@ -33,6 +32,10 @@ export default class Rate extends React.Component {
             if (this.props.from === 'eos') {
                 this.makeEOS();
             }
+
+            if (this.props.from === 'eth') {
+                this.makeETH();
+            }
         }
     }
 
@@ -55,17 +58,43 @@ export default class Rate extends React.Component {
         if (this.props.to === 'eth') {
             const isValid = addressValidator.validate(this.state.address, 'eth');
 
-            console.log(isValid);
             this.setState({ addressError: !isValid })
+        }
+
+        if (this.props.to === 'eos') {
+            const isValid = /^([a-z1-9\.]?){12}$/g.test(this.state.address);
+
+            this.setState({ addressError: !isValid });
         }
     }
 
     makeEOS() {
         eosExchange({
-            quantity: "1.0000 DUCAT",
-            blockchain: "eth",
-            to: "0x000000000"
+            quantity: `${this.state.value} DUCAT`,
+            blockchain: `${this.props.to}`,
+            to: this.state.address,
         })
+    }
+
+    makeETH() {
+        let bcIdx;
+        switch (this.props.to) {
+            case 'eos':
+                bcIdx = 2;
+                break;
+            case 'eth':
+                bcIdx = 0;
+                break;
+        }
+
+        ethWallet.init()
+            .then(() => {
+                ethWallet.exchange({
+                    quantity: this.state.value,
+                    blockchain: bcIdx,
+                    to: this.state.address
+                })
+            });
     }
 
     isValid() {
@@ -87,6 +116,7 @@ export default class Rate extends React.Component {
     }
 
     render() {
+        console.log(this.state);
         console.log(this.isValid());
         return (
             <Wrap>

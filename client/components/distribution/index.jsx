@@ -112,7 +112,7 @@ export default class Distribution extends React.Component {
 }
 const Wrap = styled.div`
     background-color: #FFFFFF;
-    width:50rem;
+    width: 50rem;
     border-radius: 10px;
 `;
 

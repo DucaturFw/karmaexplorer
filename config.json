@@ -1,4 +1,5 @@
 {
     "eosAddress": "193.93.219.219",
-    "apiHolders": "http://18.222.114.103:3011"
+    "apiHolders": "http://18.222.114.103:3011",
+    "ethContractAddress": "0x60903CDA8643805F9567a083C1734E139Fe7dAD2"
 }

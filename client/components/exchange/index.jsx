@@ -11,8 +11,8 @@ const blockList = ['eos', 'eth']
 
 export default class Exchange extends React.Component {
     state = {
-        from: 'eos',
-        to: 'eth',
+        from: 'eth',
+        to: 'eos',
         step: 0,
     }
 
