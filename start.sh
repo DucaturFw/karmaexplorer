@@ -2,4 +2,4 @@
 
 rm -rf log.txt
 
-nohup yarn serve -s build &> log.txt & echo $! > last.pid
+nohup yarn prod &> log.txt & echo $! > last.pid
